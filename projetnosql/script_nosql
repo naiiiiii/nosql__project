@@ -1,0 +1,63 @@
+# start mongod
+sudo service mongod start
+
+cd /home/touloum/Nosql/bdd
+
+## import datas csv
+mongoimport -d NY -c crimes --type csv --file crimes.csv --headerline
+
+sed -i '1s/.*/Borough,Market_Name,Street_Address,Day,Hours,Distribute,Health,Bucks,Accepts,Health,Bucks,EBT,Stellar' $folder/farmers.csv
+mongoimport -d NY -c farmers --type csv --file farmers.csv --headerline
+
+
+##Rename variable 
+
+sed -i '1s/.*/Borough,2000_population,2010_population/population.csv
+mongoimport -d NY -c population --type csv --file crimes.csv --headerline
+
+sed -i '1s/.*/DCA,licensetype,licenceexpiration,category,business,business2,numero,adress,adress2,borough,adresse_zip,contact,adressbourough,detail,longitude,latitude' $folder/Business.csv
+mongoimport -d NY -c business --type csv --file Business.csv --headerline
+
+
+##Query 
+
+
+ db.crimes.aggregate([{ 
+	$group: { _id: "$BORO_NM", sum: { $sum: 1 } } }])
+
+ db.health.aggregate([{ 
+	$group: { _id: "$Borough", sum: { $sum: 1 } } }])
+
+
+head -3 health.csv 
+
+
+db.farmers.aggregate([
+  { $match: {DAY:{$regex:"Saturday"}}},
+  {$group : {_id : "$Borough", nb_hopital : {$sum : 1}}}
+])
+
+
+#Ratio crimes/person 
+
+var collectionRatios = function() {
+    var total = db.stats.2010_population().;
+
+    var names = db.getCollectionNames();
+    names.push('system.namespaces');
+
+    names.forEach(function (collectionName) {
+      var current = db[collectionName].2010_population();
+      var percent = Math.round(current / total * 10000) / 100;
+      print(percent + '%\t' + collectionName);
+    });
+
+
+  };
+
+
+
+
+
+
+
